@@ -27,28 +27,22 @@ void main() {
         printf("ERROR !!! No se ha podido crear el proceso nieto...");
       }else{
         if(nieto ==0){
-        //NIETO = 0
         //pid (SU ID) = 3735 ppid (id Padre) = 3734
-        printf("Soy el proceso NIETO ... Variable nieto = %d \n",PEPE);
-        printf("Soy el proceso NIETO ... pid = %d ppid= %d \n",getpid(),getppid());  
+        printf("Soy el proceso NIETO ... pid = %d y el pid de mi padre = %d \n",getpid(),getppid());  
         printf("**************************************** \n");	
         }else{
-        //PADRE = 0
         //pid (SU ID) = 3734 ppid (id Padre) = 3733
         pid_nieto = wait(NULL);
-        printf("Soy el proceso PADRE ... Variable PADRE = %d \n",PEPE);
-        printf("Soy el proceso PADRE ... pid = %d ppid= %d \n",getpid(),getppid());  
+        printf("Soy el proceso PADRE ... pid = %d y el pid de mi padre = %d \n",getpid(),getppid());  
         printf("**************************************** \n");	
       }
       }
       
-        
     }else {
         //ABUELO = 3734
         //pid (SU ID) = 3733 ppid (id Padre) = 2960
         pid_hijo = wait(NULL); //espera la finalización del proceso hijo
-        printf("Soy el proceso Abuelo ... pid = %d ppid= %d \n",getpid(),getppid());	
-        printf("Soy el proceso Abuelo ... Variable abuelo = %d \n",PEPE);	 
+        printf("Soy el proceso Abuelo ... pid = %d y el pid de mi hijo = %d \n",getpid(),PEPE);	 
   }
   }
   //Tanto el proceso abuelo, padre y el proceso hijo llegan a la salida
