@@ -1,0 +1,31 @@
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.Scanner;
+
+public class UDPCliente1 {
+    public static void main(String[] args) throws IOException {
+        DatagramSocket socket = new DatagramSocket();
+        InetAddress address = InetAddress.getByName("localhost");
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Ingrese un número: ");
+        String num = sc.nextLine();
+
+        //envuelvo el numero y lo envio al server 12345
+        byte[] sendData = num.getBytes();
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address, 12345);
+        socket.send(sendPacket);
+        // se queda a la espera del paquete envuelto
+        byte[] receiveData = new byte[1024];
+        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        socket.receive(receivePacket);
+        //desenvuelvo el paquete
+        String factorialResult = new String(receivePacket.getData(), 0, receivePacket.getLength());
+
+        System.out.println("El factorial de " + num + " es: " + factorialResult);
+
+        socket.close();
+    }
+}

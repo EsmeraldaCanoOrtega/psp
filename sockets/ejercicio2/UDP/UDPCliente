@@ -1,0 +1,46 @@
+package e2ejercicioU;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class UDPCliente {
+    public static void main(String[] args) throws IOException {
+        DatagramSocket socket = new DatagramSocket();
+        InetAddress IPAddress = InetAddress.getByName("localhost");
+        int port = 12345;
+
+        // Convirtiendo el array en una cadena para enviar al servidor
+        ArrayList<Integer> numeros = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        String numbersStr = "";
+        for (int i = 0; i < numeros.size(); i++) {
+            if (i > 0) {
+                numbersStr += ",";
+            }
+            numbersStr += numeros.get(i);
+        }
+
+        // Enviando el paquete al servidor
+        byte[] sendData = numbersStr.getBytes();
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+        socket.send(sendPacket);
+
+        // Recibiendo el paquete del servidor
+        byte[] receiveData = new byte[1024];
+        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        socket.receive(receivePacket);
+
+        // Extrayendo los datos recibidos y mostrando los resultados
+        String resultStr = new String(receivePacket.getData(), 0, receivePacket.getLength());
+        System.out.println("Resultados recibidos del servidor: " + resultStr);
+
+        socket.close();
+    }
+}
+/* int[] array = new int[10];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = (int) (Math.random() * 100); // Números aleatorios entre 0 y 99
+        }*/

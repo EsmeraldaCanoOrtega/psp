@@ -1,0 +1,43 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class TCPCliente {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        final String HOST = "localhost"; // Cambia esta dirección IP por la del servidor
+        final int PUERTO = 12345;
+        Socket socket = new Socket(HOST, PUERTO);
+
+        // Enviar la longitud del array y los números al servidor
+        DataOutputStream mandarDatos = new DataOutputStream(socket.getOutputStream());
+
+        ArrayList<Integer> numeros = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        mandarDatos.writeInt(numeros.size());
+        for (int number : numeros) {
+            mandarDatos.writeInt(number);
+        }
+        mandarDatos.flush();
+
+        // Recibir los resultados del servidor
+        DataInputStream recibirDatos = new DataInputStream(socket.getInputStream());
+
+        int suma = recibirDatos.readInt();
+        int maximo = recibirDatos.readInt();
+        int minimo = recibirDatos.readInt();
+
+        System.out.println("Suma: " + suma);
+        System.out.println("Máximo: " + maximo);
+        System.out.println("Mínimo: " + minimo);
+
+        recibirDatos.close();
+        mandarDatos.close();
+        socket.close();
+    }
+    /*int[] numbers = new int[10];
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = (int) (Math.random() * 100); // Números aleatorios entre 0 y 99
+        }*/
+}

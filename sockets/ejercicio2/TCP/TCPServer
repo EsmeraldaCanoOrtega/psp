@@ -1,0 +1,42 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Arrays;
+
+public class TCPServer {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        int PUERTO = 12345;
+        ServerSocket serverSocket = new ServerSocket(PUERTO);
+        System.out.println("Servidor TCP iniciado. Esperando conexiones...");
+
+        while (true) {
+
+            Socket socket = serverSocket.accept();
+            System.out.println("Cliente conectado desde " + socket.getInetAddress().getHostAddress());
+
+            // Leer el array de números del cliente
+            DataInputStream getDatos = new DataInputStream(socket.getInputStream());
+            int length = getDatos.readInt();
+            int[] numbers = new int[length];
+            for (int i = 0; i < length; i++) {
+                numbers[i] = getDatos.readInt();
+            }
+
+            // Calcular la suma, el máximo y el mínimo
+            int sum = Arrays.stream(numbers).sum();
+            int max = Arrays.stream(numbers).max().getAsInt();
+            int min = Arrays.stream(numbers).min().getAsInt();
+
+            // Enviar los resultados al cliente
+            DataOutputStream mandarDatos = new DataOutputStream(socket.getOutputStream());
+            mandarDatos.writeInt(sum);
+            mandarDatos.writeInt(max);
+            mandarDatos.writeInt(min);
+            mandarDatos.flush();
+
+            socket.close();
+        }
+    }
+}

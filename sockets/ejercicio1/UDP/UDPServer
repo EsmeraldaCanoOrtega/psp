@@ -1,0 +1,41 @@
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+public class UDPServer {
+    public static void main(String[] args) throws IOException {
+        // se crea el server en 12345
+        DatagramSocket server = new DatagramSocket(12345);
+
+        // Primer paquete que recibe
+        byte[] receiveData = new byte[1024];
+        DatagramPacket recibePack1 = new DatagramPacket(receiveData, receiveData.length);
+        server.receive(recibePack1);
+
+        String misDatos = new String(recibePack1.getData(), 0, recibePack1.getLength());
+        // la direccion y el puerto de la primero que suelte paquete
+        InetAddress address = recibePack1.getAddress();
+        int port = recibePack1.getPort();
+
+        // Reenviar el número al Cliente2 12346
+        byte[] sendData = misDatos.getBytes();
+        DatagramPacket enviarPack2 = new DatagramPacket(sendData, sendData.length, address, 12346);
+        server.send(enviarPack2);
+
+        // Recibir el resultado del factorial del Cliente2
+        byte[] receiveFactorialData = new byte[1024];
+        DatagramPacket receiveFactorialPacket = new DatagramPacket(receiveFactorialData, receiveFactorialData.length);
+        server.receive(receiveFactorialPacket);
+
+        // cada vez que recibe algo String
+        String factorialResult = new String(receiveFactorialPacket.getData(), 0, receiveFactorialPacket.getLength());
+
+        // Enviar el resultado al Cliente1
+        byte[] sendFactorialData = factorialResult.getBytes();
+        DatagramPacket sendFactorialPacket = new DatagramPacket(sendFactorialData, sendFactorialData.length, address, port);
+        server.send(sendFactorialPacket);
+
+        server.close();
+    }
+}

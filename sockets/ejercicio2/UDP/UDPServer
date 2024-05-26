@@ -1,0 +1,53 @@
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.Arrays;
+
+public class UDPServer {
+    public static void main(String[] args) throws IOException {
+        DatagramSocket socket = new DatagramSocket(12345);
+
+        while (true) {
+            // Recibir el paquete del cliente
+            byte[] receiveData = new byte[1024];
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            socket.receive(receivePacket);
+
+            // Desenvolver el paquete
+            String info = new String(receivePacket.getData(), 0, receivePacket.getLength());
+
+            // Convertir la cadena en un array de números enteros
+            String[] numerosString = info.split(",");
+            int[] numeros = new int[numerosString.length];
+            for (int i = 0; i < numerosString.length; i++) {
+                numeros[i] = Integer.parseInt(numerosString[i]);
+            }
+
+            // Calcular suma, mínimo y máximo
+            int sum = Arrays.stream(numeros).sum();
+            int max = Arrays.stream(numeros).max().getAsInt();
+            int min = Arrays.stream(numeros).min().getAsInt();
+
+
+            // Construir la respuesta como una cadena
+            String resultStr = "Suma: " + sum + ", Mínimo: " + min + ", Máximo: " + max;
+
+            // direccion recogida del envio
+            InetAddress address = receivePacket.getAddress();
+            int port = receivePacket.getPort();
+            // Enviar la respuesta al cliente
+            byte[] sendData = resultStr.getBytes();
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address, port);
+            socket.send(sendPacket);
+        }
+    }
+    /*int sum = 0;
+            int min = numeros[0];
+            int max = numeros[0];
+            for (int num : numeros) {
+                sum += num;
+                if (num < min) min = num;
+                if (num > max) max = num;
+            }*/
+}
