@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+
 void printPID(pid_t pid) {
     if (pid % 2 == 0) {
         printf("Soy el proceso con PID %d y mi padre es %d\n", getpid(), getppid());
